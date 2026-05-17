@@ -219,9 +219,9 @@ public class Main {
 
 
         frame.add(panel);
-        frame.setSize(400,200);
-        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        frame.setSize(400, 200);
         frame.setVisible(true);
+        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
 
 
