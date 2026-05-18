@@ -8,7 +8,8 @@ class Character {
 
     int health;
     int maxHealth; // Testing full health limit
-    int damage; // Testing each character receiving their own attack power
+    int damage;
+    int damageDone;// Testing each character receiving their own attack power
 
     String attack;
     String rest;
@@ -39,7 +40,7 @@ class Wizard extends Character {
 
     @Override
     public void train() {
-        train = "learning new spells ... staff acquired";
+        train = "learning new spells";
     }
 
 
@@ -54,7 +55,7 @@ class Archer extends Character {
 
     @Override
     public void train() {
-        train = "collecting arrows . . . upgrading bow";
+        train = "upgrading bow and arrows";
     }
 
 }
@@ -63,12 +64,12 @@ class Swordsman extends Character {
 
     @Override
     public void attack() {
-        attack = "swinging sword . . .";
+        attack = "swinging sword, new tactics";
     }
 
     @Override
     public void train() {
-        train = "sparring . . . upgrading sword";
+        train = "sparring, upgrading sword";
     }
 }
 
@@ -86,17 +87,15 @@ public class Main {
 
         w.health = 150;
         w.maxHealth = 150; // Testing health max
-        w.damage = rn.nextInt(0,150); // Characters unique damage variable
 
         s.health = 75;
         s.maxHealth = 75; // Testing health max
-        s.damage = rn.nextInt(0,75); // Characters unique damage variable
 
         a.health = 100;
         a.maxHealth = 100; // Testing health max
-        a.damage = rn.nextInt(0,100); // Characters unique damage variable
 
-        JFrame frame = new JFrame("Final Game");
+
+        JFrame frame = new JFrame("Java Clash: The Final Edition");
 
         // Adjusted Grid to accommodate new label
         JPanel panel = new JPanel(new GridLayout(4, 3, 5, 5));
@@ -126,6 +125,7 @@ public class Main {
 
         // Added health label
         JLabel healthLbl = new JLabel("Health: ");
+        JLabel critHit = new JLabel("Critical hit, Heal up ");
 
         panel.add(wizard);
         panel.add(restBtn);
@@ -143,6 +143,9 @@ public class Main {
         // Health label added to panel
         panel.add(healthLbl);
 
+        panel.add(critHit);
+        critHit.setVisible(false);
+
 
         // player selection button functions & health update of selected character added
         wizard.addActionListener(e -> {
@@ -151,6 +154,13 @@ public class Main {
 
 
             healthLbl.setText("Health: " + selectedCharacter[0].health + " / " + selectedCharacter[0].maxHealth);
+
+            if(selectedCharacter[0].health > 0){
+                trainBtn.setVisible(true);
+            } else {
+                trainBtn.setVisible(false);
+            }
+
         }); // shows health / max health
 
         archer.addActionListener(e -> {
@@ -158,6 +168,13 @@ public class Main {
             selectedLbl.setText("Selected: Archer");
 
             healthLbl.setText("Health: " + selectedCharacter[0].health + " / " + selectedCharacter[0].maxHealth);
+
+            if(selectedCharacter[0].health > 0){
+                trainBtn.setVisible(true);
+            } else {
+                trainBtn.setVisible(false);
+            }
+
         }); // shows health / max health
 
         swordsman.addActionListener(e -> {
@@ -165,6 +182,13 @@ public class Main {
             selectedLbl.setText("Selected: Swordman");
 
             healthLbl.setText("Health: " + selectedCharacter[0].health + " / " + selectedCharacter[0].maxHealth);
+
+            if(selectedCharacter[0].health > 0){
+                trainBtn.setVisible(true);
+            } else {
+                trainBtn.setVisible(false);
+            }
+
         }); // shows health / max health
 
 
@@ -175,13 +199,20 @@ public class Main {
 
                 return;
             }
+            s.damage = rn.nextInt(0,75); // Characters unique damage variable
+            w.damage = rn.nextInt(0,150); // Characters unique damage variable
+            a.damage = rn.nextInt(0,100); // Characters unique damage variable
+            s.damageDone = rn.nextInt(0,75); // Characters unique damageDone variable
+            w.damageDone = rn.nextInt(0,150); // Characters unique damageDone variable
+            a.damageDone = rn.nextInt(0,100); // Characters unique damageDone variable
             selectedCharacter[0].attack();
 
             selectedCharacter[0].health -=
                     selectedCharacter[0].damage; // selected character loses health based on their own damage number
 
+            if(selectedCharacter[0].damage >= selectedCharacter[0].maxHealth/2)
+                critHit.setVisible(true);
 
-            trainLbl.setText("");
             restLbl.setText("");
             attackBtn.setVisible(false);
 
@@ -189,15 +220,22 @@ public class Main {
                 selectedCharacter[0].health = 0;
             }                                   // prevents health from going to 0
 
-            attackLbl.setText(
+            trainLbl.setText(
                     selectedCharacter[0].attack);
+
+            attackLbl.setText("Damage Dealt: " +selectedCharacter[0].damageDone);
+
+            if(selectedCharacter[0].damageDone >= selectedCharacter[0].maxHealth/2){
+                attackLbl.setText("Crit Hit " + selectedCharacter[0].damageDone +" Enemy Defeated");
+            }
 
             healthLbl.setText("Health: " + selectedCharacter[0].health
                     + " / " + selectedCharacter[0].maxHealth); // Attack button updates health on screen. Shows health / max health
 
-            if (selectedCharacter[0].health == 0)
+            if (selectedCharacter[0].health == 0) {
                 restLbl.setText("Rest to heal character");
-
+                trainBtn.setVisible(false);
+            }
         });
 
 
@@ -210,6 +248,7 @@ public class Main {
                 return;
             }
 
+            critHit.setVisible(false);
             attackBtn.setVisible(true);
 
             attackLbl.setText("");
@@ -235,6 +274,9 @@ public class Main {
 
                 return;
             }
+            critHit.setVisible(false);
+            trainBtn.setVisible(true);
+
             selectedCharacter[0].rest();
             selectedCharacter[0].health += rn.nextInt(0, 150);  // plus 10 increases health, updating stats requirement
 
@@ -255,7 +297,7 @@ public class Main {
 
 
         frame.add(panel);
-        frame.setSize(425, 200);
+        frame.setSize(550, 200);
         frame.setVisible(true);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
     }
