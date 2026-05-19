@@ -2,7 +2,7 @@
 // click the <icon src="AllIcons.Actions.Execute"/> icon in the gutter.
 import javax.swing.*;
 import java.awt.*;
-import java. util. Random;
+import java.util.Random;
 
 class Character {
 
@@ -179,7 +179,7 @@ public class Main {
 
         swordsman.addActionListener(e -> {
             selectedCharacter[0] = s;
-            selectedLbl.setText("Selected: Swordman");
+            selectedLbl.setText("Selected: Swordsman");
 
             healthLbl.setText("Health: " + selectedCharacter[0].health + " / " + selectedCharacter[0].maxHealth);
 
